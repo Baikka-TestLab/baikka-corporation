@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Contact Us — Baikka</title>
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <div class="blob blob-1"></div>
+  <div class="blob blob-2"></div>
+  <div class="blob blob-3"></div>
+
+  <!-- Admin button top-right -->
+  <a href="admin.html" class="admin-nav-btn">Admin</a>
+
+  <div class="page-wrap">
+    <header style="animation:fadeDown 0.8s ease both;">
+      <div class="logo-badge">Baikka &nbsp;·&nbsp; Intelligence Solutions</div>
+      <h1>Let's Build<br>Something Intelligent</h1>
+      <p class="subtitle">Tell us about your project. Our team will analyze your needs and respond within 24 hours.</p>
+    </header>
+
+    <div class="form-card">
+
+      <div class="success-overlay" id="successOverlay">
+        <div class="success-icon">✦</div>
+        <div class="success-title">Request Received</div>
+        <p class="success-sub">Your inquiry has been logged in our system. A specialist will reach out within 24 hours to discuss your AI solution.</p>
+      </div>
+
+      <div class="form-inner" id="formInner">
+
+        <div class="section-divider"><span>Identity</span></div>
+
+        <div class="form-grid">
+          <div class="field" id="f-name">
+            <label>Full Name <span class="req">*</span></label>
+            <input type="text" id="fullName" placeholder="John Doe" autocomplete="name">
+            <span class="error-msg">Full name is required</span>
+          </div>
+
+          <div class="field" id="f-email">
+            <label>Gmail Address <span class="req">*</span></label>
+            <input type="email" id="email" placeholder="you@gmail.com" autocomplete="email">
+            <span class="error-msg">A valid Gmail address is required</span>
+          </div>
+
+          <div class="field" id="f-company">
+            <label>Company Name <span class="opt">optional</span></label>
+            <input type="text" id="company" placeholder="Acme Corp">
+          </div>
+
+          <div class="field" id="f-role">
+            <label>Role in Company <span class="opt">optional</span></label>
+            <input type="text" id="role" placeholder="CEO / Developer / Manager">
+          </div>
+        </div>
+
+        <div class="section-divider"><span>Project Details</span></div>
+
+        <div class="form-grid">
+          <div class="field full" id="f-service">
+            <label>Service You Want <span class="req">*</span></label>
+            <div class="select-wrap">
+              <select id="service">
+                <option value="" disabled selected>— Select a service —</option>
+                <option value="ai-chatbot">🤖 AI Chat Bot</option>
+                <option value="ai-automation">⚡ AI Full Automations</option>
+                <option value="ai-coding">💻 AI Coding</option>
+                <option value="local-ai">🖥️ Local AI PC Build</option>
+                <option value="n8n">🔗 N8n Services</option>
+              </select>
+            </div>
+            <span class="error-msg">Please select a service</span>
+          </div>
+
+          <div class="field full" id="f-budget">
+            <label>Budget <span class="req">*</span></label>
+            <div class="budget-wrap">
+              <input type="number" id="budget" placeholder="e.g. 500" min="1" step="1">
+            </div>
+            <span class="error-msg">Please enter your approximate budget</span>
+          </div>
+        </div>
+
+        <div class="submit-area">
+          <button class="btn-submit" type="button" id="submitBtn" onclick="submitForm()">
+            Submit Request <span class="arrow">→</span>
+          </button>
+          <p class="privacy-note">
+            By submitting you agree to our <a href="#">Privacy Policy</a>.
+          </p>
+        </div>
+
+      </div>
+    </div>
+
+    <footer>
+      © 2026 Baikka · <span>All systems operational</span>
+    </footer>
+  </div>
+
+  <script src="config.js"></script>
+  <script src="contact.js"></script>
+</body>
+</html>

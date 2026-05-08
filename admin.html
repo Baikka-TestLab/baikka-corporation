@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Login — Baikka</title>
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+  <style>
+    .login-card {
+      width: 100%;
+      max-width: 440px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 52px 48px;
+      position: relative;
+      overflow: hidden;
+      animation: fadeUp 0.9s ease 0.2s both;
+      box-shadow: 0 0 0 1px rgba(0,212,255,0.04), 0 40px 120px rgba(0,0,0,0.6), inset 0 1px 0 rgba(255,255,255,0.04);
+    }
+    .login-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, var(--accent2), var(--accent), transparent);
+      opacity: 0.6;
+    }
+    .login-card::after {
+      content: '';
+      position: absolute;
+      top: -1px; left: -1px;
+      width: 100px; height: 100px;
+      background: radial-gradient(circle at top left, rgba(123,97,255,0.12), transparent 70%);
+      border-radius: 20px 0 0 0;
+    }
+
+    .login-header {
+      text-align: center;
+      margin-bottom: 40px;
+    }
+    .lock-icon {
+      width: 56px; height: 56px;
+      border-radius: 14px;
+      background: rgba(123,97,255,0.1);
+      border: 1px solid rgba(123,97,255,0.25);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 22px;
+      margin: 0 auto 20px;
+      box-shadow: 0 0 30px rgba(123,97,255,0.15);
+    }
+    .login-title {
+      font-family: 'Syne', sans-serif;
+      font-size: 1.7rem;
+      font-weight: 800;
+      background: linear-gradient(135deg, #fff 0%, #c0b0ff 50%, var(--accent2) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-bottom: 8px;
+    }
+    .login-sub {
+      font-size: 11px;
+      color: var(--text-muted);
+      letter-spacing: 0.08em;
+    }
+
+    .login-fields {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+    .login-fields .field { animation: none; }
+
+    .btn-login {
+      width: 100%;
+      padding: 16px 32px;
+      background: linear-gradient(135deg, var(--accent2) 0%, var(--accent) 100%);
+      border: none;
+      border-radius: 12px;
+      color: #fff;
+      font-family: 'Syne', sans-serif;
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      cursor: pointer;
+      position: relative;
+      overflow: hidden;
+      transition: transform .2s, box-shadow .2s;
+      box-shadow: 0 4px 30px rgba(123,97,255,0.3);
+      margin-top: 8px;
+    }
+    .btn-login::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(135deg, rgba(255,255,255,0.15), transparent);
+      opacity: 0;
+      transition: opacity .2s;
+    }
+    .btn-login:hover { transform: translateY(-2px); box-shadow: 0 8px 40px rgba(123,97,255,0.45); }
+    .btn-login:hover::before { opacity: 1; }
+    .btn-login:active { transform: translateY(0); }
+    .btn-login:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+
+    .global-error {
+      display: none;
+      background: rgba(255,77,109,0.08);
+      border: 1px solid rgba(255,77,109,0.25);
+      border-radius: 10px;
+      padding: 12px 16px;
+      font-size: 11px;
+      color: var(--error);
+      letter-spacing: 0.04em;
+      text-align: center;
+      margin-top: 4px;
+    }
+    .global-error.show { display: block; }
+
+    .back-link {
+      display: block;
+      text-align: center;
+      margin-top: 24px;
+      font-size: 10px;
+      color: var(--text-dim);
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      text-decoration: none;
+      transition: color .2s;
+    }
+    .back-link:hover { color: var(--accent); }
+
+    .loading-spinner {
+      display: inline-block;
+      width: 14px; height: 14px;
+      border: 2px solid rgba(255,255,255,0.3);
+      border-top-color: #fff;
+      border-radius: 50%;
+      animation: spin .6s linear infinite;
+      margin-right: 8px;
+      vertical-align: middle;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+  </style>
+</head>
+<body>
+
+  <div class="blob blob-1"></div>
+  <div class="blob blob-2"></div>
+  <div class="blob blob-3"></div>
+
+  <div class="page-wrap" style="justify-content:center;">
+
+    <div class="login-card">
+      <div class="login-header">
+        <div class="lock-icon">⬡</div>
+        <div class="login-title">Admin Access</div>
+        <p class="login-sub">Restricted · Baikka Intelligence Solutions</p>
+      </div>
+
+      <div class="login-fields">
+        <div class="field" id="f-adminEmail">
+          <label>Gmail Address <span class="req">*</span></label>
+          <input type="email" id="adminEmail" placeholder="admin@gmail.com" autocomplete="email">
+          <span class="error-msg">Enter a valid Gmail address</span>
+        </div>
+
+        <div class="field" id="f-adminPass">
+          <label>Password <span class="req">*</span></label>
+          <input type="password" id="adminPass" placeholder="••••••••" autocomplete="current-password">
+          <span class="error-msg">Password is required</span>
+        </div>
+
+        <div class="global-error" id="globalError">
+          Invalid credentials. Please try again.
+        </div>
+
+        <button class="btn-login" id="loginBtn" onclick="doLogin()">
+          Access Dashboard <span class="arrow" style="margin-left:8px;">→</span>
+        </button>
+      </div>
+
+      <a href="index.html" class="back-link">← Back to Contact Form</a>
+    </div>
+
+  </div>
+
+  <script src="config.js"></script>
+  <script src="admin-login.js"></script>
+</body>
+</html>

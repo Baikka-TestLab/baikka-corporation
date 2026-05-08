@@ -1,0 +1,502 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashboard — Baikka Admin</title>
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+  <style>
+    /* ── Dashboard layout ── */
+    body { overflow-x: hidden; }
+
+    .dash-wrap {
+      position: relative;
+      z-index: 2;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      padding: 0;
+    }
+
+    /* Top navbar */
+    .dash-nav {
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      background: rgba(8,10,15,0.85);
+      backdrop-filter: blur(16px);
+      border-bottom: 1px solid var(--border);
+      padding: 0 32px;
+      height: 64px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      animation: fadeDown .6s ease both;
+    }
+    .nav-left {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+    }
+    .nav-logo {
+      font-family: 'Syne', sans-serif;
+      font-size: 15px;
+      font-weight: 800;
+      background: linear-gradient(135deg, #fff 0%, var(--accent) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .nav-sep { width: 1px; height: 20px; background: var(--border); }
+    .nav-label {
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: 0.18em;
+      color: var(--text-muted);
+    }
+    .nav-right {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+    .admin-pill {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(123,97,255,0.08);
+      border: 1px solid rgba(123,97,255,0.2);
+      border-radius: 999px;
+      padding: 5px 14px;
+      font-size: 10px;
+      letter-spacing: 0.12em;
+      color: var(--accent2);
+    }
+    .admin-pill::before {
+      content: '';
+      width: 6px; height: 6px;
+      border-radius: 50%;
+      background: var(--accent2);
+      box-shadow: 0 0 8px var(--accent2);
+    }
+    .btn-logout {
+      background: transparent;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 7px 16px;
+      color: var(--text-muted);
+      font-family: 'DM Mono', monospace;
+      font-size: 10px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: border-color .2s, color .2s;
+    }
+    .btn-logout:hover { border-color: var(--error); color: var(--error); }
+
+    /* Main content */
+    .dash-content {
+      flex: 1;
+      padding: 40px 32px;
+      max-width: 1400px;
+      width: 100%;
+      margin: 0 auto;
+    }
+
+    /* Stats row */
+    .stats-row {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 16px;
+      margin-bottom: 36px;
+      animation: fadeUp .7s ease .1s both;
+    }
+    .stat-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 24px 20px;
+      position: relative;
+      overflow: hidden;
+    }
+    .stat-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 1px;
+      opacity: 0.5;
+    }
+    .stat-card:nth-child(1)::before { background: linear-gradient(90deg, transparent, var(--accent), transparent); }
+    .stat-card:nth-child(2)::before { background: linear-gradient(90deg, transparent, var(--accent2), transparent); }
+    .stat-card:nth-child(3)::before { background: linear-gradient(90deg, transparent, var(--accent3), transparent); }
+    .stat-card:nth-child(4)::before { background: linear-gradient(90deg, transparent, #ff9d00, transparent); }
+
+    .stat-label {
+      font-size: 9px;
+      text-transform: uppercase;
+      letter-spacing: 0.2em;
+      color: var(--text-muted);
+      margin-bottom: 12px;
+    }
+    .stat-value {
+      font-family: 'Syne', sans-serif;
+      font-size: 2rem;
+      font-weight: 800;
+      color: var(--text);
+      line-height: 1;
+    }
+    .stat-value.cyan   { color: var(--accent); }
+    .stat-value.purple { color: var(--accent2); }
+    .stat-value.green  { color: var(--accent3); }
+    .stat-value.orange { color: #ff9d00; }
+
+    /* Table header bar */
+    .table-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 20px;
+      gap: 16px;
+      flex-wrap: wrap;
+      animation: fadeUp .7s ease .2s both;
+    }
+    .table-title {
+      font-family: 'Syne', sans-serif;
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--text);
+      letter-spacing: 0.04em;
+    }
+    .table-actions { display: flex; gap: 10px; flex-wrap: wrap; }
+
+    .btn-action {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 9px 16px;
+      color: var(--text-muted);
+      font-family: 'DM Mono', monospace;
+      font-size: 10px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: border-color .2s, color .2s, background .2s;
+    }
+    .btn-action:hover { border-color: var(--accent); color: var(--accent); background: rgba(0,212,255,0.04); }
+    .btn-action.green:hover { border-color: var(--accent3); color: var(--accent3); background: rgba(0,255,157,0.04); }
+    .btn-action .icon { font-size: 12px; }
+
+    /* Search input */
+    .search-wrap {
+      position: relative;
+    }
+    .search-wrap::before {
+      content: '⌕';
+      position: absolute;
+      left: 12px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--text-muted);
+      font-size: 15px;
+      pointer-events: none;
+    }
+    #searchInput {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 9px 14px 9px 32px;
+      color: var(--text);
+      font-family: 'DM Mono', monospace;
+      font-size: 11px;
+      width: 220px;
+      outline: none;
+      transition: border-color .2s;
+    }
+    #searchInput:focus { border-color: var(--accent); }
+    #searchInput::placeholder { color: var(--text-dim); }
+
+    /* Table */
+    .table-wrap {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      overflow: hidden;
+      animation: fadeUp .7s ease .3s both;
+      position: relative;
+    }
+    .table-wrap::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, var(--accent), var(--accent2), transparent);
+      opacity: 0.4;
+    }
+
+    table { width: 100%; border-collapse: collapse; }
+
+    thead tr {
+      background: rgba(0,212,255,0.03);
+      border-bottom: 1px solid var(--border);
+    }
+    th {
+      padding: 14px 18px;
+      text-align: left;
+      font-size: 9px;
+      text-transform: uppercase;
+      letter-spacing: 0.2em;
+      color: var(--text-muted);
+      font-weight: 500;
+      white-space: nowrap;
+    }
+    th:first-child { padding-left: 24px; }
+    th:last-child  { padding-right: 24px; }
+
+    tbody tr {
+      border-bottom: 1px solid rgba(30,42,58,0.5);
+      transition: background .15s;
+    }
+    tbody tr:last-child { border-bottom: none; }
+    tbody tr:hover { background: rgba(0,212,255,0.025); }
+
+    td {
+      padding: 16px 18px;
+      font-size: 12px;
+      color: var(--text);
+      vertical-align: middle;
+    }
+    td:first-child { padding-left: 24px; }
+    td:last-child  { padding-right: 24px; }
+
+    .td-name { font-weight: 500; color: var(--text); }
+    .td-email { color: var(--accent); font-size: 11px; }
+    .td-company { color: var(--text-muted); }
+    .td-role { color: var(--text-muted); font-size: 11px; }
+
+    .service-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      background: rgba(123,97,255,0.1);
+      border: 1px solid rgba(123,97,255,0.2);
+      border-radius: 999px;
+      padding: 3px 10px;
+      font-size: 10px;
+      color: var(--accent2);
+      white-space: nowrap;
+    }
+
+    .td-budget {
+      font-family: 'Syne', sans-serif;
+      font-weight: 700;
+      color: var(--accent3);
+      font-size: 13px;
+    }
+
+    .td-date { color: var(--text-dim); font-size: 10px; }
+
+    /* Empty & loading states */
+    .table-empty {
+      text-align: center;
+      padding: 80px 20px;
+    }
+    .table-empty .empty-icon {
+      font-size: 36px;
+      margin-bottom: 16px;
+      opacity: 0.3;
+    }
+    .table-empty p {
+      font-size: 12px;
+      color: var(--text-muted);
+      letter-spacing: 0.06em;
+    }
+
+    .table-loading {
+      text-align: center;
+      padding: 80px 20px;
+      font-size: 12px;
+      color: var(--text-muted);
+      letter-spacing: 0.1em;
+    }
+    .spinner {
+      display: inline-block;
+      width: 24px; height: 24px;
+      border: 2px solid var(--border);
+      border-top-color: var(--accent);
+      border-radius: 50%;
+      animation: spin .7s linear infinite;
+      margin-bottom: 14px;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* Pagination */
+    .pagination {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 16px 24px;
+      border-top: 1px solid var(--border);
+      font-size: 10px;
+      color: var(--text-muted);
+      letter-spacing: 0.08em;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+    .page-btns { display: flex; gap: 6px; }
+    .page-btn {
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 5px 12px;
+      color: var(--text-muted);
+      font-family: 'DM Mono', monospace;
+      font-size: 10px;
+      cursor: pointer;
+      transition: border-color .2s, color .2s;
+    }
+    .page-btn:hover:not(:disabled) { border-color: var(--accent); color: var(--accent); }
+    .page-btn:disabled { opacity: 0.3; cursor: not-allowed; }
+    .page-btn.active { border-color: var(--accent); color: var(--accent); background: rgba(0,212,255,0.05); }
+
+    /* Toast */
+    .toast {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      z-index: 999;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 14px 20px;
+      font-size: 11px;
+      color: var(--text);
+      letter-spacing: 0.06em;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+      transform: translateY(80px);
+      opacity: 0;
+      transition: transform .35s cubic-bezier(0.34,1.56,0.64,1), opacity .35s ease;
+      pointer-events: none;
+    }
+    .toast.show { transform: translateY(0); opacity: 1; }
+    .toast .toast-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--accent3); box-shadow: 0 0 8px var(--accent3); flex-shrink: 0; }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      .dash-nav { padding: 0 16px; }
+      .dash-content { padding: 24px 16px; }
+      .table-wrap { overflow-x: auto; }
+      table { min-width: 700px; }
+      #searchInput { width: 160px; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="blob blob-1"></div>
+  <div class="blob blob-2"></div>
+
+  <div class="dash-wrap">
+
+    <!-- Navbar -->
+    <nav class="dash-nav">
+      <div class="nav-left">
+        <div class="nav-logo">Baikka</div>
+        <div class="nav-sep"></div>
+        <div class="nav-label">Admin Dashboard</div>
+      </div>
+      <div class="nav-right">
+        <div class="admin-pill" id="adminPill">admin</div>
+        <button class="btn-logout" onclick="doLogout()">Sign Out</button>
+      </div>
+    </nav>
+
+    <!-- Main -->
+    <div class="dash-content">
+
+      <!-- Stats -->
+      <div class="stats-row">
+        <div class="stat-card">
+          <div class="stat-label">Total Submissions</div>
+          <div class="stat-value cyan" id="statTotal">—</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Avg. Budget</div>
+          <div class="stat-value purple" id="statAvgBudget">—</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Most Requested</div>
+          <div class="stat-value green" id="statTopService" style="font-size:1rem;padding-top:4px;">—</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Total Pipeline</div>
+          <div class="stat-value orange" id="statPipeline">—</div>
+        </div>
+      </div>
+
+      <!-- Table bar -->
+      <div class="table-bar">
+        <div class="table-title">Contact Submissions</div>
+        <div class="table-actions">
+          <div class="search-wrap">
+            <input type="text" id="searchInput" placeholder="Search by name, email…" oninput="filterTable()">
+          </div>
+          <button class="btn-action green" onclick="exportCSV()">
+            <span class="icon">↓</span> Export CSV
+          </button>
+          <button class="btn-action" onclick="loadSubmissions()">
+            <span class="icon">↻</span> Refresh
+          </button>
+        </div>
+      </div>
+
+      <!-- Table -->
+      <div class="table-wrap">
+        <table id="subTable">
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>Name</th>
+              <th>Email</th>
+              <th>Company</th>
+              <th>Role</th>
+              <th>Service</th>
+              <th>Budget</th>
+              <th>Date</th>
+            </tr>
+          </thead>
+          <tbody id="tableBody">
+            <tr>
+              <td colspan="8">
+                <div class="table-loading">
+                  <div class="spinner"></div>
+                  <p>Loading submissions…</p>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+        <div class="pagination" id="pagination" style="display:none;">
+          <span id="paginationInfo">Showing 0 of 0</span>
+          <div class="page-btns" id="pageBtns"></div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Toast -->
+  <div class="toast" id="toast">
+    <div class="toast-dot"></div>
+    <span id="toastMsg"></span>
+  </div>
+
+  <script src="config.js"></script>
+  <script src="dashboard.js"></script>
+</body>
+</html>
