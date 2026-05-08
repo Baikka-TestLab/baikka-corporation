@@ -12,6 +12,6 @@ const CONFIG = {
 
   // ── n8n Webhook ──────────────────────────────────────────
   // Your n8n contact form automation webhook URL
-  N8N_WEBHOOK_URL:  "https://1524-747.n8nbysnbd.top/webhook-test/baikka-corporation",
+  N8N_WEBHOOK_URL:  "https://1524-747.n8nbysnbd.top/webhook/baikka-corporation",
 
 };
